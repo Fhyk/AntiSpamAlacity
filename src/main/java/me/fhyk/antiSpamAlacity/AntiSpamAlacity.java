@@ -18,6 +18,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
+
+
 public class AntiSpamAlacity extends JavaPlugin implements Listener, TabExecutor {
     private List<String> keywords;
     private int keywordMessagesCount;
@@ -31,7 +33,7 @@ public class AntiSpamAlacity extends JavaPlugin implements Listener, TabExecutor
     private boolean sendMessage;
     private String spamMessage;
     private long spamMuteTime;
-    private Set<String> mutedPlayers=new HashSet<>();
+    private Set<String> mutes =new HashSet<>();
     private Set<String> spamBypassPlayers=new HashSet<>();
     private final Map<String, List<Long>> keywordmessages=new ConcurrentHashMap<>();
     private final Map<String, List<Long>> normalmessages=new ConcurrentHashMap<>();
@@ -63,7 +65,7 @@ public class AntiSpamAlacity extends JavaPlugin implements Listener, TabExecutor
         sendMessage=cfg.getBoolean("send-spam-message", false);
         spamMessage=ChatColor.translateAlternateColorCodes('&', cfg.getString("spam-message", "Your messages were filtered as spam. Stop spamming!"));
         spamMuteTime =cfg.getLong("spam-mute-duration", 300)*1000L;
-        mutedPlayers=new HashSet<>(cfg.getStringList("muted-players"));
+        mutes =new HashSet<>(cfg.getStringList("muted-players"));
         spamBypassPlayers=new HashSet<>();
         for (String s: cfg.getStringList("spam-players")) {
             spamBypassPlayers.add(s.toLowerCase());
@@ -86,6 +88,7 @@ public class AntiSpamAlacity extends JavaPlugin implements Listener, TabExecutor
         keywordmessages.remove(name);
         normalmessages.remove(name);
         shadowmutetime.remove(name);
+
     }
 
     @EventHandler
@@ -95,7 +98,6 @@ public class AntiSpamAlacity extends JavaPlugin implements Listener, TabExecutor
         normalmessages.remove(name);
         shadowmutetime.remove(name);
     }
-
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
         Player p=event.getPlayer();
@@ -113,7 +115,7 @@ public class AntiSpamAlacity extends JavaPlugin implements Listener, TabExecutor
             }
         }
 
-        if (mutedPlayers.contains(name)) {
+        if (mutes.contains(name)) {
             event.getRecipients().clear();
             event.getRecipients().add(p);
             if (sendMuteMessage) p.sendMessage(muteMessage);
@@ -195,8 +197,10 @@ public class AntiSpamAlacity extends JavaPlugin implements Listener, TabExecutor
                 sender.sendMessage(ChatColor.RED+"Usage: /mute <player>");
                 return true;
             }
+
+
             String targetName=args[0].toLowerCase();
-            mutedPlayers.add(targetName);
+            mutes.add(targetName);
             saveMutes();
             sender.sendMessage(ChatColor.GREEN+args[0]+" has been muted.");
             Player target=Bukkit.getPlayerExact(args[0]);
@@ -210,7 +214,7 @@ public class AntiSpamAlacity extends JavaPlugin implements Listener, TabExecutor
                 return true;
             }
             String targetName=args[0].toLowerCase();
-            mutedPlayers.remove(targetName);
+            mutes.remove(targetName);
             saveMutes();
             sender.sendMessage(ChatColor.GREEN+args[0]+" has been unmuted.");
             Player target=Bukkit.getPlayerExact(args[0]);
@@ -220,11 +224,11 @@ public class AntiSpamAlacity extends JavaPlugin implements Listener, TabExecutor
 
         if (cmd.getName().equalsIgnoreCase("mutelist")) {
             sender.sendMessage(ChatColor.YELLOW+"Muted players:");
-            if (mutedPlayers.isEmpty()) {
+            if (mutes.isEmpty()) {
                 sender.sendMessage(ChatColor.GRAY+" - none");
                 return true;
             }
-            for (String m: mutedPlayers) {
+            for (String m: mutes) {
                 sender.sendMessage(ChatColor.YELLOW+" - "+m);
             }
             return true;
@@ -234,7 +238,7 @@ public class AntiSpamAlacity extends JavaPlugin implements Listener, TabExecutor
     }
 
     private void saveMutes() {
-        getConfig().set("muted-players", new ArrayList<>(mutedPlayers));
+        getConfig().set("muted-players", new ArrayList<>(mutes));
         saveConfig();
     }
 
