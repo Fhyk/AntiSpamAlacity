@@ -197,7 +197,7 @@ public class AntiSpamAlacity extends JavaPlugin implements Listener, TabExecutor
             }
             String targetName=args[0].toLowerCase();
             mutedPlayers.add(targetName);
-            saveMuted();
+            saveMutes();
             sender.sendMessage(ChatColor.GREEN+args[0]+" has been muted.");
             Player target=Bukkit.getPlayerExact(args[0]);
             if (target!=null && sendMuteMessage) target.sendMessage(muteMessage);
@@ -211,7 +211,7 @@ public class AntiSpamAlacity extends JavaPlugin implements Listener, TabExecutor
             }
             String targetName=args[0].toLowerCase();
             mutedPlayers.remove(targetName);
-            saveMuted();
+            saveMutes();
             sender.sendMessage(ChatColor.GREEN+args[0]+" has been unmuted.");
             Player target=Bukkit.getPlayerExact(args[0]);
             if (target!=null && sendMuteMessage) target.sendMessage(ChatColor.GREEN+"You have been unmuted.");
@@ -233,7 +233,7 @@ public class AntiSpamAlacity extends JavaPlugin implements Listener, TabExecutor
         return false;
     }
 
-    private void saveMuted() {
+    private void saveMutes() {
         getConfig().set("muted-players", new ArrayList<>(mutedPlayers));
         saveConfig();
     }
