@@ -1,0 +1,49 @@
+#Words or phrases to block if repeated too many times
+filtered-words:
+  - "add spam here"
+
+
+#How many times a filtered word can be said in the time period by the same player. Set to 1 to always filter keywords
+keyword-messages-count: 1
+
+#Time window (in seconds) to look for repeated keywords
+keyword-time-period: 200
+
+#Amount of non-keywords sent by the same player for them to be counted as spam
+normal-messages-count: 5
+
+#Time window (in seconds) to look for repeated keywords
+normal-time-period: 200
+
+#How long to mute someone for once they have been detected as spamming (in seconds)
+spam-mute-duration: 300
+
+#To send a message to the player when they are muted or not
+send-mute-message: false
+
+#What the server tells a player when they are muted
+mute-message: "you have been muted lol"
+
+#To kick a player for spam or not
+kick-for-spam: false
+
+#What the message says when a player is kicked for spam
+kick-message: "you have been kicked for spamming"
+
+#To send a chat message to spamming players or not
+send-spam-message: false
+
+#The message sent to spamming players
+spam-message: "Your messages were filtered as spam. Stop spamming!"
+
+#Players who are muted
+muted-players:
+  - "example player"
+
+
+#Players who can still see spammed/filtered messages
+spam-players:
+ - "example player"
+
+
+

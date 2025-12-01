@@ -1,0 +1,21 @@
+name: AntiSpamAlacity
+main: me.fhyk.antiSpamAlacity.AntiSpamAlacity
+version: 1.0
+api-version: 1.21
+
+commands:
+  antispam:
+    description: Reload the AntiSpam config
+    usage: /antispam reload
+
+  mute:
+    description: Mute a player
+    usage: /mute <player>
+
+  unmute:
+    description: Unmute a player
+    usage: /unmute <player>
+
+  mutelist:
+    description: Shows a list of muted players
+    usage: /mutelist

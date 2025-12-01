@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AntiSpamAlacity:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/AntiSpamAlacity_jar</output-path>
+    <root id="archive" name="AntiSpamAlacity.jar">
+      <element id="module-output" name="AntiSpamAlacity" />
+    </root>
+  </artifact>
+</component>
