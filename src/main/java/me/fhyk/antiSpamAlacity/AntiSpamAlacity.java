@@ -100,68 +100,72 @@ public class AntiSpamAlacity extends JavaPlugin implements Listener, TabExecutor
     }
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-        Player p=event.getPlayer();
-        String name=p.getName().toLowerCase();
-        long now=System.currentTimeMillis();
+        Player p = event.getPlayer();
+        String name = p.getName().toLowerCase();
+        long now = System.currentTimeMillis();
 
-        Long until=shadowmutetime.get(name);
-        if (until!=null) {
-            if (now<until) {
-                event.getRecipients().clear();
-                event.getRecipients().add(p);
+        Long until = shadowmutetime.get(name);
+        if (until != null) {
+            if (now < until) {
+                event.setCancelled(true);
+                p.sendMessage(ChatColor.GRAY + p.getName() + ": " + event.getMessage());
                 return;
             } else {
                 shadowmutetime.remove(name);
             }
         }
-
         if (mutes.contains(name)) {
-            event.getRecipients().clear();
-            event.getRecipients().add(p);
+            event.setCancelled(true);
             if (sendMuteMessage) p.sendMessage(muteMessage);
+            p.sendMessage(ChatColor.GRAY + p.getName() + ": " + event.getMessage());
             return;
         }
 
         if (spamBypassPlayers.contains(name)) return;
 
-        String msg=event.getMessage().toLowerCase();
+        String msg = event.getMessage().toLowerCase();
 
-        boolean containsKeyword=false;
-        for (String word: keywords) {
+        // Keyword check
+        boolean containsKeyword = false;
+        for (String word : keywords) {
             if (msg.contains(word.toLowerCase())) {
-                containsKeyword=true;
+                containsKeyword = true;
                 break;
             }
         }
 
         if (containsKeyword) {
-            List<Long> list=keywordmessages.computeIfAbsent(name, k->new ArrayList<>());
+            List<Long> list = keywordmessages.computeIfAbsent(name, k -> new ArrayList<>());
             list.add(now);
-            list.removeIf(t->now-t> keywordTime);
-            if (list.size()>=keywordMessagesCount) {
-                event.getRecipients().clear();
-                event.getRecipients().add(p);
+            list.removeIf(t -> now - t > keywordTime);
+
+            if (list.size() >= keywordMessagesCount) {
+                event.setCancelled(true);
+
                 if (sendMessage) p.sendMessage(spamMessage);
-                shadowmutetime.put(name, now+ spamMuteTime);
+
+                shadowmutetime.put(name, now + spamMuteTime);
                 list.clear();
                 normalmessages.remove(name);
+                p.sendMessage(ChatColor.GRAY + p.getName() + ": " + event.getMessage());
                 return;
             }
+
             return;
         }
-
-        List<Long> norm=normalmessages.computeIfAbsent(name, k->new ArrayList<>());
+        List<Long> norm = normalmessages.computeIfAbsent(name, k -> new ArrayList<>());
         norm.add(now);
-        norm.removeIf(t->now-t> normalMsgTime);
-        if (norm.size()>=normalMessages) {
-            event.getRecipients().clear();
-            event.getRecipients().add(p);
+        norm.removeIf(t -> now - t > normalMsgTime);
+
+        if (norm.size() >= normalMessages) {
+            event.setCancelled(true);
             if (sendMessage) p.sendMessage(spamMessage);
-            shadowmutetime.put(name, now+ spamMuteTime);
+            shadowmutetime.put(name, now + spamMuteTime);
             norm.clear();
             keywordmessages.remove(name);
+            p.sendMessage(ChatColor.GRAY + p.getName() + ": " + event.getMessage());
             if (kick) {
-                Bukkit.getScheduler().runTask(this, ()->p.kickPlayer(kickMessage));
+                Bukkit.getScheduler().runTask(this, () -> p.kickPlayer(kickMessage));
             }
         }
     }
