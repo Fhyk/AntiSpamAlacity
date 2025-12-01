@@ -3,8 +3,8 @@ filtered-words:
   - "add spam here"
 
 
-#How many times a filtered word can be said in the time period by the same player. Set to 1 to always filter keywords
-keyword-messages-count: 1
+#How many times a filtered word can be said in the time period by the same player. Set to 0 to always filter keywords
+keyword-messages-count: 0
 
 #Time window (in seconds) to look for repeated keywords
 keyword-time-period: 200
