@@ -34,7 +34,7 @@ kick-message: "you have been kicked for spamming"
 send-spam-message: false
 
 #The message sent to spamming players
-spam-message: "Your messages were filtered as spam. Stop spamming!"
+spam-message: "&cYour messages were filtered as spam. Stop spamming!"
 
 #Players who are muted
 muted-players:
